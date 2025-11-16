@@ -1,0 +1,21 @@
+[project]
+name = "movie-db-builder"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "httpx>=0.28.1",
+    "pydantic>=2.12.4",
+    "sqlalchemy>=2.0.44",
+]
+
+[project.scripts]
+main = "movie_db_builder.__main__:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["movie_db_builder"]
+
+[tool.uv]
+package = true
