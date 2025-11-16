@@ -6,9 +6,9 @@ from movie_db_builder.db.db import (
     create_db,
     add_tmdb_movies,
     add_tmdb_genres,
-    add_tmdb_movie_genre,
+    add_tmdb_movie_to_genre,
     add_tmdb_credits,
-    add_tmdb_movie_person,
+    add_tmdb_movie_to_person,
 )
 from movie_db_builder.tmdb.models import TMDBMovie, TMDBGenre
 from movie_db_builder.tmdb.tmdb_client import TMDBClient
@@ -47,13 +47,13 @@ def main():
     add_tmdb_genres(engine=engine, tmdb_genres=tmdb_genres)
 
     # Add relationship between movies and genres to database
-    add_tmdb_movie_genre(engine=engine, tmdb_movies=tmdb_movies)
+    add_tmdb_movie_to_genre(engine=engine, tmdb_movies=tmdb_movies)
 
     # Add credits to database
     add_tmdb_credits(engine=engine, tmdb_movies=tmdb_movies)
 
     # Add relationship between movies and credits to database
-    add_tmdb_movie_person(engine=engine, tmdb_movies=tmdb_movies)
+    add_tmdb_movie_to_person(engine=engine, tmdb_movies=tmdb_movies)
 
 
 if __name__ == "__main__":

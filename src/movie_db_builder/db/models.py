@@ -28,12 +28,11 @@ class Genre(Base):
     name: Mapped[str] = mapped_column(String(255))
 
 
-class MovieGenre(Base):
-    __tablename__ = "movies_genres"
+class MovieToGenre(Base):
+    __tablename__ = "movies_to_genres"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    movie_id: Mapped[int] = mapped_column(ForeignKey(Movie.id))
-    genre_id: Mapped[int] = mapped_column(ForeignKey(Genre.id))
+    movie_id: Mapped[int] = mapped_column(ForeignKey(Movie.id), primary_key=True)
+    genre_id: Mapped[int] = mapped_column(ForeignKey(Genre.id), primary_key=True)
 
 
 class Person(Base):
@@ -45,13 +44,13 @@ class Person(Base):
     known_for_department: Mapped[str | None] = mapped_column(String(255))
 
 
-class MoviePerson(Base):
-    __tablename__ = "movies_people"
+class MovieToPerson(Base):
+    __tablename__ = "movies_to_people"
 
-    id: Mapped[str] = mapped_column(primary_key=True)
-    movie_id: Mapped[int] = mapped_column(ForeignKey(Movie.id))
-    person_id: Mapped[int] = mapped_column(ForeignKey(Person.id))
+    movie_id: Mapped[int] = mapped_column(ForeignKey(Movie.id), primary_key=True)
+    person_id: Mapped[int] = mapped_column(ForeignKey(Person.id), primary_key=True)
     cast_id: Mapped[int | None] = mapped_column(Integer)
+    credit_id: Mapped[str] = mapped_column(String(255))
     character: Mapped[str | None] = mapped_column(String(255))
     order: Mapped[int | None] = mapped_column(Integer)
     department: Mapped[str | None] = mapped_column(String(255))

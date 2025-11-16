@@ -6,11 +6,11 @@ from movie_db_builder.db.models import (
     Base,
     Genre,
     Movie,
-    MovieGenre,
+    MovieToGenre,
     Person,
-    MoviePerson,
+    MovieToPerson,
 )
-from movie_db_builder.tmdb.models import TMDBMovie
+from movie_db_builder.tmdb.models import TMDBMovie, TMDBGenre
 
 
 def create_db(engine: Engine):
@@ -44,7 +44,7 @@ def add_tmdb_movies(engine: Engine, tmdb_movies: list[TMDBMovie]):
         session.commit()
 
 
-def add_tmdb_genres(engine: Engine, tmdb_genres: list[TMBDGenre]):
+def add_tmdb_genres(engine: Engine, tmdb_genres: list[TMDBGenre]):
     with Session(engine) as session:
         stmt = insert(Genre).values([dict(id=g.id, name=g.name) for g in tmdb_genres])
         stmt = stmt.on_conflict_do_nothing(index_elements=["id"])
@@ -52,17 +52,17 @@ def add_tmdb_genres(engine: Engine, tmdb_genres: list[TMBDGenre]):
         session.commit()
 
 
-def add_tmdb_movie_genre(engine: Engine, tmdb_movies: list[TMDBMovie]):
+def add_tmdb_movie_to_genre(engine: Engine, tmdb_movies: list[TMDBMovie]):
     with Session(engine) as session:
         movie_genre_values = [
-            {"id": movie.id + genre.id, "movie_id": movie.id, "genre_id": genre.id}
+            {"movie_id": movie.id, "genre_id": genre.id}
             for movie in tmdb_movies
             for genre in movie.genres
         ]
 
         if movie_genre_values:
-            stmt = insert(MovieGenre).values(movie_genre_values)
-            stmt = stmt.on_conflict_do_nothing(index_elements=["id"])
+            stmt = insert(MovieToGenre).values(movie_genre_values)
+            stmt = stmt.on_conflict_do_nothing()
             session.execute(stmt)
             session.commit()
 
@@ -104,16 +104,16 @@ def add_tmdb_credits(engine: Engine, tmdb_movies: list[TMDBMovie]):
         session.commit()
 
 
-def add_tmdb_movie_person(engine: Engine, tmdb_movies: list[TMDBMovie]):
+def add_tmdb_movie_to_person(engine: Engine, tmdb_movies: list[TMDBMovie]):
     with Session(engine) as session:
-        # Inset cast
-        stmt = insert(MoviePerson).values(
+        # Insert cast
+        stmt = insert(MovieToPerson).values(
             [
                 dict(
-                    id=person.credit_id,
                     movie_id=movie.id,
                     person_id=person.id,
                     cast_id=person.cast_id,
+                    credit_id=person.credit_id,
                     character=person.character,
                     order=person.order,
                     department=person.department,
@@ -123,18 +123,18 @@ def add_tmdb_movie_person(engine: Engine, tmdb_movies: list[TMDBMovie]):
                 for person in movie.credits.cast
             ]
         )
-        stmt = stmt.on_conflict_do_nothing(index_elements=["id"])
+        stmt = stmt.on_conflict_do_nothing()
         session.execute(stmt)
         session.commit()
 
         # Insert crew
-        stmt = insert(MoviePerson).values(
+        stmt = insert(MovieToPerson).values(
             [
                 dict(
-                    id=int(str(movie.id) + str(person.id)),
                     movie_id=movie.id,
                     person_id=person.id,
                     cast_id=person.cast_id,
+                    credit_id=person.credit_id,
                     character=person.character,
                     order=person.order,
                     department=person.department,
@@ -144,6 +144,6 @@ def add_tmdb_movie_person(engine: Engine, tmdb_movies: list[TMDBMovie]):
                 for person in movie.credits.crew
             ]
         )
-        stmt = stmt.on_conflict_do_nothing(index_elements=["id"])
+        stmt = stmt.on_conflict_do_nothing()
         session.execute(stmt)
         session.commit()
