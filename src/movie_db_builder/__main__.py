@@ -1,4 +1,5 @@
 import os
+import typer
 
 from sqlalchemy import create_engine
 
@@ -14,14 +15,17 @@ from movie_db_builder.tmdb.models import TMDBMovie, TMDBGenre
 from movie_db_builder.tmdb.tmdb_client import TMDBClient
 from movie_db_builder.tmdb.tmdb_config import TMDBConfig
 
+app = typer.Typer()
 
-def main():
+
+@app.command()
+def main(file: str) -> None:
     engine = create_engine("sqlite:///movies.db")
     create_db(engine)
     TMDB_TOKEN = os.getenv("TMDB_TOKEN")
     if not TMDB_TOKEN:
         print("tmdb API Token not set")
-        exit(1)
+        raise typer.Exit(code=1)
     config = TMDBConfig(api_token=TMDB_TOKEN)
     client = TMDBClient(config=config)
 
@@ -30,7 +34,7 @@ def main():
 
     # Get tmdb ids from file
     tmdb_ids: list[str] = []
-    with open("../tmdb.csv", "r") as file:
+    with open(file, "r") as file:
         for line in file:
             tmdb_ids.append(line.strip())
 
@@ -57,4 +61,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    app()

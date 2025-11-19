@@ -8,14 +8,20 @@ dependencies = [
     "httpx>=0.28.1",
     "pydantic>=2.12.4",
     "sqlalchemy>=2.0.44",
+    "typer>=0.20.0",
 ]
 
 [project.scripts]
-main = "movie_db_builder.__main__:main"
+db_builder = "movie_db_builder.__main__:app"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 packages = ["movie_db_builder"]
+
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [tool.uv]
 package = true
