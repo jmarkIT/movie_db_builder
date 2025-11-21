@@ -1,6 +1,7 @@
 import os
 import typer
 
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 
 from movie_db_builder.db.db import (
@@ -22,15 +23,23 @@ app = typer.Typer()
 def main(file: str) -> None:
     engine = create_engine("sqlite:///movies.db")
     create_db(engine)
+
+    load_dotenv()
+
     TMDB_TOKEN = os.getenv("TMDB_TOKEN")
     if not TMDB_TOKEN:
         print("tmdb API Token not set")
         raise typer.Exit(code=1)
-    config = TMDBConfig(api_token=TMDB_TOKEN)
-    client = TMDBClient(config=config)
+    NOTION_TOKEN = os.getenv("NOTION_TOKEN")
+    if not NOTION_TOKEN:
+        print("notion API Token not set")
+        raise typer.Exit(code=1)
+
+    tmdb_config = TMDBConfig(api_token=TMDB_TOKEN)
+    tmdb_client = TMDBClient(config=tmdb_config)
 
     # Call api to get list of genres
-    tmdb_genres = client.get_genres()
+    tmdb_genres = tmdb_client.get_genres()
 
     # Get tmdb ids from file
     tmdb_ids: list[str] = []
@@ -41,7 +50,9 @@ def main(file: str) -> None:
     # Call TMDB api for movie details
     tmdb_movies: list[TMDBMovie] = []
     for tmdb_id in tmdb_ids:
-        tmdb_movie = client.get_movie_details(tmdb_id, append_to_response=["credits"])
+        tmdb_movie = tmdb_client.get_movie_details(
+            tmdb_id, append_to_response=["credits"]
+        )
         tmdb_movies.append(tmdb_movie)
 
     # Add Movies to database
