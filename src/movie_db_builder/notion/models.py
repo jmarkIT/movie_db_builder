@@ -77,3 +77,16 @@ class NotionDate(BaseModel):
 
 class NotionRelation(BaseModel):
     id: str
+
+
+class NotionDatabaseQueryResponse(BaseModel):
+    object: str
+    results: list[NotionPage]
+    next_cursor: str | None = None
+    hasMore: bool
+    type: str | None = None
+    page: dict[str, str] | None = None
+
+
+class NotionDatabaseQueryBody(BaseModel):
+    start_cursor: str | None = None
