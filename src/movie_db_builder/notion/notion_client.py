@@ -21,7 +21,7 @@ class NotionClient:
         headers: dict[str:str] = {
             "Authorization": f"Bearer {self.config.notion_api_key}",
             "Content-Type": "application/json",
-            "API-Version": self.config.API_VERSION,
+            "Notion-Version": self.config.API_VERSION,
         }
 
         url: str = f"{self.config.API_BASE_URL}/{endpoint}"
