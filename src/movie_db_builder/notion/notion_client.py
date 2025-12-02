@@ -41,18 +41,22 @@ class NotionClient:
 
     def get_datasource_rows(self, data_source_id: str) -> list[NotionPage]:
         datasource_rows: list[NotionPage] = []
-        query_results: NotionDatabaseQueryResponse = self.perform_request(
+        r: httpx.Response | None = self.perform_request(
             endpoint=f"data_sources/{data_source_id}/query", method="POST", params=None
         )
+        query_results = NotionDatabaseQueryResponse(**r.json())
         datasource_rows.extend(query_results.results)
-        while query_results.hasMore:
-            body = NotionDatabaseQueryBody(start_cursor=query_results.next_cursor)
-            query_results = self.perform_request(
+        while query_results.has_more:
+            # body = NotionDatabaseQueryBody(start_cursor=query_results.next_cursor)
+            body = {"start_cursor": query_results.next_cursor}
+            r = self.perform_request(
                 f"data_sources/{data_source_id}/query",
                 method="POST",
                 params=None,
                 data=body,
             )
+
+            query_results = NotionDatabaseQueryResponse(**r.json())
 
             datasource_rows.extend(query_results.results)
 
