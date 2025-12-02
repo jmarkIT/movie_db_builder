@@ -29,7 +29,7 @@ class NotionClient:
             case "GET":
                 return httpx.get(url, headers=headers, params=params)
             case "POST":
-                return httpx.post(url, headers=headers, params=params, data=data)
+                return httpx.post(url, headers=headers, params=params, json=data)
             case _:
                 return None
 
