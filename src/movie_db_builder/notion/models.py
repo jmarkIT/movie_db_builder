@@ -85,7 +85,7 @@ class NotionPeopleType(str, Enum):
 
 class NotionDate(BaseModel):
     start: str
-    end: str
+    end: str | None = None
 
 
 class NotionRelation(BaseModel):
