@@ -17,8 +17,8 @@ class NotionProperty(BaseModel):
     id: str
     type: NotionPropertyType
 
-    title: str | None = None
-    rich_text: str | None = None
+    title: list[NotionRichText] | None = None
+    rich_text: list[NotionRichText] | None = None
     number: int | None = None
     checkbox: bool | None = None
     select: NotionSelectProperty | None = None
@@ -56,6 +56,18 @@ class NotionSelectProperty(BaseModel):
     id: str | None = None
     name: str
     color: str
+
+
+class NotionRichText(BaseModel):
+    type: str | None = None
+    plain_text: str | None = None
+    href: str | None = None
+    text: NotionTextContent | None = None
+
+
+class NotionTextContent(BaseModel):
+    content: str
+    link: dict[str, str] | None = None
 
 
 class NotionPerson(BaseModel):
