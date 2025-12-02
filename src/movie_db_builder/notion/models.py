@@ -8,9 +8,9 @@ class NotionPage(BaseModel):
     id: str
     created_time: str
     last_edited_time: str
-    created_by: str
-    last_edited_by: str
-    properties: list[NotionProperty]
+    # created_by: str
+    # last_edited_by: str
+    properties: dict[str, NotionProperty]
     url: str
 
 
