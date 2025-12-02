@@ -27,7 +27,7 @@ class NotionClient:
         url: str = f"{self.config.API_BASE_URL}/{endpoint}"
         match method:
             case "GET":
-                return httpx.get(url, headers=headers, params=params, data=None)
+                return httpx.get(url, headers=headers, params=params)
             case "POST":
                 return httpx.post(url, headers=headers, params=params, data=data)
             case _:
