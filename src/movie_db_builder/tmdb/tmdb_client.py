@@ -1,6 +1,6 @@
 import httpx
 
-from movie_db_builder.tmdb.models import TMDBMovie, TMDBGenresQuery, TMDBGenre
+from movie_db_builder.tmdb.models import TMDBGenre, TMDBGenresQuery, TMDBMovie
 from movie_db_builder.tmdb.tmdb_config import TMDBConfig
 
 
@@ -9,7 +9,11 @@ class TMDBClient:
         self.config = config
 
     def perform_request(
-        self, endpoint: str, method: str = "GET", params: dict = None, data: dict = None
+        self,
+        endpoint: str,
+        method: str = "GET",
+        params: dict | None = None,
+        data: dict | None = None,
     ) -> httpx.Response | None:
         headers: dict[str:str] = {
             "Authorization": f"Bearer {self.config.api_token}",
