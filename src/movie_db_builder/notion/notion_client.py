@@ -1,11 +1,10 @@
-from movie_db_builder.notion.models import (
-    NotionDatabaseQueryResponse,
-    NotionDatabaseQueryBody,
-)
 import httpx
 
+from movie_db_builder.notion.models import (
+    NotionDatabaseQueryResponse,
+    NotionPage,
+)
 from movie_db_builder.notion.notion_config import NotionConfig
-from movie_db_builder.notion.models import NotionPage
 
 
 class NotionClient:
