@@ -1,21 +1,15 @@
 import os
-import typer
 
+import typer
 from sqlalchemy import create_engine
 
 from movie_db_builder.db.db import (
     create_db,
-    add_tmdb_movies,
-    add_tmdb_genres,
-    add_tmdb_movie_to_genre,
-    add_tmdb_credits,
-    add_tmdb_movie_to_person,
 )
-from movie_db_builder.tmdb.models import TMDBMovie, TMDBGenre
+from movie_db_builder.notion.notion_client import NotionClient
+from movie_db_builder.notion.notion_config import NotionConfig
 from movie_db_builder.tmdb.tmdb_client import TMDBClient
 from movie_db_builder.tmdb.tmdb_config import TMDBConfig
-from movie_db_builder.notion.notion_config import NotionConfig
-from movie_db_builder.notion.notion_client import NotionClient
 
 app = typer.Typer()
 
@@ -72,7 +66,7 @@ def main(file: str) -> None:
     # # Add relationship between movies and credits to database
     # add_tmdb_movie_to_person(engine=engine, tmdb_movies=tmdb_movies)
 
-    rows = notion_client.get_datasource_rows("9d9e132b-5b77-496f-b78b-3c0abd33d1f2")
+    _ = notion_client.get_datasource_rows("9d9e132b-5b77-496f-b78b-3c0abd33d1f2")
 
 
 if __name__ == "__main__":
