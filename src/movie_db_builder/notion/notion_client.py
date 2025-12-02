@@ -34,9 +34,10 @@ class NotionClient:
                 return None
 
     def get_page(self, page_id: str) -> NotionPage:
-        return self.perform_request(
+        r: httpx.Response | None = self.perform_request(
             endpoint=f"pages/{page_id}", method="GET", params=None
         )
+        return NotionPage(**r.json())
 
     def get_datasource_rows(self, data_source_id: str) -> list[NotionPage]:
         datasource_rows: list[NotionPage] = []
