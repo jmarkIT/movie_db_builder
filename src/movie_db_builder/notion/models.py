@@ -83,7 +83,7 @@ class NotionDatabaseQueryResponse(BaseModel):
     object: str
     results: list[NotionPage]
     next_cursor: str | None = None
-    hasMore: bool
+    has_more: bool
     type: str | None = None
     page: dict[str, str] | None = None
 
