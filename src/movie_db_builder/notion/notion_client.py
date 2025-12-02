@@ -15,8 +15,8 @@ class NotionClient:
         self,
         endpoint: str,
         method: str = "GET",
-        params: dict = None,
-        data: dict = None,
+        params: dict | None = None,
+        data: dict | None = None,
     ) -> httpx.Response | None:
         headers: dict[str, str] = {
             "Authorization": f"Bearer {self.config.notion_api_key}",
