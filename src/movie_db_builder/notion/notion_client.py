@@ -18,7 +18,7 @@ class NotionClient:
         params: dict = None,
         data: dict = None,
     ) -> httpx.Response | None:
-        headers: dict[str:str] = {
+        headers: dict[str, str] = {
             "Authorization": f"Bearer {self.config.notion_api_key}",
             "Content-Type": "application/json",
             "Notion-Version": self.config.API_VERSION,
