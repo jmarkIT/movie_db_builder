@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import cast
 
 from pydantic import BaseModel
 
@@ -27,6 +28,23 @@ class NotionProperty(BaseModel):
     people: NotionPerson | None = None
     date: NotionDate | None = None
     relation: list[NotionRelation] | None = None
+
+    @property
+    def plain_text(self) -> str | None:
+        match self.type:
+            case NotionPropertyType.title:
+                items = self.title or []
+            case NotionPropertyType.rich_text:
+                items = self.rich_text or []
+            case _:
+                return None
+
+        # Filter and coerce to list[str]
+
+        collected = [
+            cast(str, rt.plain_text) for rt in items if rt.plain_text is not None
+        ]
+        return "".join(collected)
 
 
 class NotionPropertyType(str, Enum):

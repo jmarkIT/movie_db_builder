@@ -1,17 +1,18 @@
-from sqlalchemy import Engine
+from sqlalchemy import Engine, Insert
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import Session
-from sqlalchemy import Insert
 
 from movie_db_builder.db.models import (
     Base,
     Genre,
     Movie,
     MovieToGenre,
-    Person,
     MovieToPerson,
+    Person,
+    WeeklySelection,
 )
-from movie_db_builder.tmdb.models import TMDBMovie, TMDBGenre
+from movie_db_builder.models import WeeklySelectionData
+from movie_db_builder.tmdb.models import TMDBGenre, TMDBMovie
 
 
 def create_db(engine: Engine) -> None:
@@ -145,6 +146,26 @@ def add_tmdb_movie_to_person(engine: Engine, tmdb_movies: list[TMDBMovie]) -> No
                 )
                 for movie in tmdb_movies
                 for person in movie.credits.crew
+            ]
+        )
+        stmt = stmt.on_conflict_do_nothing()
+        session.execute(stmt)
+        session.commit()
+
+
+def add_weekly_selection(
+    engine: Engine, weekly_selections: list[WeeklySelectionData]
+) -> None:
+    with Session(bind=engine) as session:
+        stmt: Insert = insert(WeeklySelection).values(
+            [
+                dict(
+                    week_of=week.week_of,
+                    master_of_ceremony=week.master_of_ceremony,
+                    primary_movie_id=week.primary_movie_id,
+                    secondary_movie_id=week.secondary_movie_id,
+                )
+                for week in weekly_selections
             ]
         )
         stmt = stmt.on_conflict_do_nothing()

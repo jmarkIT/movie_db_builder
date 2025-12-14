@@ -1,7 +1,5 @@
-from sqlalchemy import String, Integer, ForeignKey
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
+from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
@@ -18,7 +16,7 @@ class Movie(Base):
     runtime: Mapped[int] = mapped_column(Integer)
 
     def __repr__(self) -> str:
-        return f"Movie(id={self.id!r}, title{self.title!r}"
+        return f"Movie(id={self.id!r}, title{self.title!r})"
 
 
 class Genre(Base):
@@ -26,6 +24,9 @@ class Genre(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(255))
+
+    def __repr__(self) -> str:
+        return f"Genre(id={self.id!r}, title{self.name!r})"
 
 
 class MovieToGenre(Base):
@@ -55,3 +56,12 @@ class MovieToPerson(Base):
     order: Mapped[int | None] = mapped_column(Integer)
     department: Mapped[str | None] = mapped_column(String(255))
     job: Mapped[str | None] = mapped_column(String(255))
+
+
+class WeeklySelection(Base):
+    __tablename__ = "weekly_selections"
+
+    week_of: Mapped[str] = mapped_column(String(255), primary_key=True)
+    master_of_ceremony: Mapped[str] = mapped_column(String(255))
+    primary_movie_id: Mapped[int] = mapped_column(ForeignKey(Movie.id))
+    secondary_movie_id: Mapped[int | None] = mapped_column(ForeignKey(Movie.id))

@@ -15,7 +15,7 @@ class TMDBClient:
         params: dict | None = None,
         data: dict | None = None,
     ) -> httpx.Response | None:
-        headers: dict[str:str] = {
+        headers: dict[str, str] = {
             "Authorization": f"Bearer {self.config.api_token}",
             "Content-Type": "application/json",
         }
@@ -39,11 +39,35 @@ class TMDBClient:
             params={"append_to_response": append_to_response},
             data=None,
         )
-        return TMDBMovie(**r.json())
+
+        if r is None:
+            raise RuntimeError(f"TMDB API returned no response for {movie_id}")
+
+        data = r.json()
+
+        try:
+            movie = TMDBMovie(**data)
+        except TypeError as e:
+            raise TypeError(
+                f"TMDBMovie parsing failed, API response was: {data}"
+            ) from e
+
+        return movie
 
     def get_genres(self) -> list[TMDBGenre]:
         r: httpx.Response | None = self.perform_request(
             endpoint="/genre/movie/list", method="GET"
         )
-        genres_query = TMDBGenresQuery(**r.json())
+        if r is None:
+            raise RuntimeError("TMDB API resturned no response for genre list")
+
+        data = r.json()
+
+        try:
+            genres_query = TMDBGenresQuery(**data)
+        except TypeError as e:
+            raise TypeError(
+                f"TMDBGenresQuery parsing failed, API response was: {data}"
+            ) from e
+
         return genres_query.genres
