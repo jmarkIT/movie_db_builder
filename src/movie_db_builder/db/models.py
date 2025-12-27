@@ -16,7 +16,7 @@ class Movie(Base):
     runtime: Mapped[int] = mapped_column(Integer)
 
     def __repr__(self) -> str:
-        return f"Movie(id={self.id!r}, title{self.title!r})"
+        return f"Movie(id={self.id!r}, title={self.title!r})"
 
 
 class Genre(Base):
@@ -26,7 +26,7 @@ class Genre(Base):
     name: Mapped[str] = mapped_column(String(255))
 
     def __repr__(self) -> str:
-        return f"Genre(id={self.id!r}, title{self.name!r})"
+        return f"Genre(id={self.id!r}, name={self.name!r})"
 
 
 class MovieToGenre(Base):
