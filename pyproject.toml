@@ -12,6 +12,15 @@ dependencies = [
     "typer>=0.20.0",
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.14.0",
+    "respx>=0.21.0",
+]
+
 [project.scripts]
 db_builder = "movie_db_builder.__main__:app"
 
@@ -26,3 +35,11 @@ build-backend = "setuptools.build_meta"
 
 [tool.uv]
 package = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-v"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
